@@ -3,13 +3,21 @@ const serverless = require('serverless-http');
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const compression = require('compression')
+// const fs = require('fs');
+// const cors = require('cors')
 const uppy = require('@uppy/companion')
 
-const port = process.env.PORT || 3111;
 const app = express();
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+const port = process.env.PORT;
 
 
 app.use(compression())
+// app.use(cors())
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -17,34 +25,46 @@ app.use(session({
 }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-const host = process.env.DOMAIN.split('://')[1]
-const protocol = process.env.DOMAIN.split('://')[0]
+const DOMAIN = process.env.DOMAIN;
+const host = DOMAIN.split('://')[1]
+const protocol = DOMAIN.split('://')[0]
+
+// if (!fs.existsSync('/tmp')) fs.mkdirSync('/tmp');
+// if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp');
 
 const options = {
   providerOptions: {
     s3: {
-      getKey: (req, filename) => filename,
-      bucket: process.env.AWS_S3_BUCKET,
-      region: process.env.AWS_S3_REGION
+      getKey: (req, filename) => Date.now() + '_' + filename,
+      bucket: process.env.BUCKET_NAME,
+      region: process.env.BUCKET_REGION,
+      key: process.env.USER_ACCESS_KEY,
+      secret: process.env.USER_SECRET_KEY
     },
-    instagram: {
-      key: process.env.INSTAGRAM_KEY,
-      secret: process.env.INSTAGRAM_SECRET
-    },
-    google: {
-      key: process.env.GOOGLE_KEY,
-      secret: process.env.GOOGLE_SECRET
-    },
-    dropbox: {
-      key: process.env.DROPBOX_KEY,
-      secret: process.env.DROPBOX_SECRET
+    // instagram: {
+    //   key: process.env.INSTAGRAM_KEY,
+    //   secret: process.env.INSTAGRAM_SECRET
+    // },
+    // drive: {
+    //   key: process.env.GOOGLE_KEY,
+    //   secret: process.env.GOOGLE_SECRET
+    // },
+    // dropbox: {
+    //   key: process.env.DROPBOX_KEY,
+    //   secret: process.env.DROPBOX_SECRET
+    // },
+    searchProviders: {
+      unsplash: {
+        key: process.env.UNSPLASH_API_KEY,
+        secret: process.env.UNSPLASH_API_SECRET,
+      },
     }
   },
   server: {
     host: host,
     protocol: protocol
   },
-  filePath: '/tmp',
+  filePath: './tmp',
   secret: process.env.UPPY_SECRET
 }
 

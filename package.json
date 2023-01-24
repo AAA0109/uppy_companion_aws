@@ -2,10 +2,11 @@
   "name": "uploader",
   "version": "1.0.0",
   "dependencies": {
-    "@uppy/companion": "^0.17.3",
+    "@uppy/companion": "^3.7.2",
     "body-parser": "^1.18.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "serverless-http": "^3.1.1"
