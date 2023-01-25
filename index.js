@@ -2,7 +2,7 @@ const express = require('express');
 const serverless = require('serverless-http');
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const compression = require('compression')
+// const compression = require('compression')
 // const fs = require('fs');
 // const cors = require('cors')
 const uppy = require('@uppy/companion')
@@ -16,7 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
 const port = process.env.PORT;
 
 
-app.use(compression())
+// app.use(compression())
 // app.use(cors())
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -64,7 +64,7 @@ const options = {
     host: host,
     protocol: protocol
   },
-  filePath: './tmp',
+  filePath: '/tmp',
   secret: process.env.UPPY_SECRET
 }
 
